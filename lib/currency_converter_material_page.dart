@@ -18,6 +18,17 @@ class _CurrencyConverterMaterialPageState
   // Controller for the input text field to capture user input
   final TextEditingController textEditingController = TextEditingController();
 
+  void convert() {
+    result = double.parse(textEditingController.text) * 87.09;
+    setState(() {});
+  }
+
+  @override
+  void dispose() {
+    textEditingController.dispose();
+    super.dispose();
+  }
+
   @override
   Widget build(BuildContext context) {
     // Defines a common border style used in the input field
@@ -27,53 +38,60 @@ class _CurrencyConverterMaterialPageState
     );
 
     return Scaffold(
-      // backgroundColor: Color.fromARGB(255, 0, 0, 0),
-      backgroundColor: Colors.blueGrey,
+      // backgroundColor: Color.fromARGB(255, 0, 0, 0), // Unused, but could set background color to black
+      backgroundColor:
+          Colors.blueGrey, // Set the background color of the screen
 
       appBar: AppBar(
-        title: const Text('Curreny Converter'),
-        backgroundColor: Colors.blueGrey,
-        elevation: 50, // Adds depth effect to AppBar
+        title: const Text('Currency Converter'), // Title of the app
+        backgroundColor: Colors.blueGrey, // AppBar color matches the background
+        elevation: 50, // Adds a depth effect (shadow) to the AppBar
         centerTitle: true, // Centers the title in the AppBar
         titleTextStyle: const TextStyle(
-          fontWeight: FontWeight.w500,
-          fontSize: 20,
-          color: Colors.white,
+          fontWeight: FontWeight.w500, // Semi-bold font weight
+          fontSize: 20, // Font size of the title
+          color: Colors.white, // Title color set to white
         ),
       ),
 
-      // Main UI centered on the screen
+      // Main UI content centered on the screen
       body: Center(
-        child: Column(
-          mainAxisAlignment: MainAxisAlignment.center, // Aligns elements to the center
-          children: [
-            // Displays the converted currency result
-            Container(
-              padding: const EdgeInsets.all(
-                10.0,
-              ), // related to the gap between stuff inside and border
-              margin: const EdgeInsets.all(
-                10.0,
-              ), // related to the gap between border and stuff outside
-              color: Colors.blueGrey, // takes only the text space
-              child: Text(
-                'INR ${result.toString()}', // Display the converted amount
-                style: const TextStyle(
-                  fontSize: 45,
-                  fontWeight: FontWeight.w700,
-                  color: Colors.white,
+        child: Padding(
+          padding: const EdgeInsets.all(
+            10,
+          ), // Adds padding around the entire body content
+          child: Column(
+            mainAxisAlignment:
+                MainAxisAlignment
+                    .center, // Centers elements vertically in the Column
+            children: [
+              // Displays the converted currency result
+              Container(
+                padding: const EdgeInsets.all(
+                  10.0,
+                ), // Padding inside the container
+                margin: const EdgeInsets.all(
+                  10.0,
+                ), // Margin outside the container
+                color: Colors.blueGrey, // Background color of the container
+                child: Text(
+                  // Shows the converted INR value
+                  'INR ${result != 0 ? result.toStringAsFixed(2) : result.toStringAsFixed(0)}',
+                  style: const TextStyle(
+                    fontSize: 45, // Text size of the converted amount
+                    fontWeight: FontWeight.w700, // Bold text for emphasis
+                    color: Colors.white, // Text color set to white
+                  ),
                 ),
               ),
-            ),
 
-            // Input field for entering USD value
-            Padding(
-              // container is the collection of many widgets while padding is one of them
-              padding: const EdgeInsets.all(10),
-              // margin: const EdgeInsets.all(8.0), Available only for container widget
-              child: TextField(
-                controller: textEditingController, // Controller for input text
-                style: const TextStyle(color: Colors.black), // Text color
+              // Input field where the user can type the USD value
+              TextField(
+                controller:
+                    textEditingController, // Associates this field with the textEditingController
+                style: const TextStyle(
+                  color: Colors.black,
+                ), // Text color set to black
                 decoration: InputDecoration(
                   // label: Text(
                   //   'Please Enter Value in INR',
@@ -82,72 +100,59 @@ class _CurrencyConverterMaterialPageState
                   //   ),
                   // ),
                   hintText: "Please Enter Value in USD", // Placeholder text
-                  hintStyle: const TextStyle(color: Colors.black),
+                  hintStyle: const TextStyle(
+                    color: Colors.black,
+                  ), // Hint text style
                   prefixIcon: const Icon(
-                    Icons.monetization_on_outlined,
-                  ), // if wanna add after text then use suffix instead of prefix everything else same
-                  prefixIconColor: Colors.black,
-                  filled: true, // Enables background color for input field
-                  fillColor: Colors.white, // Background color of input field
-
-                  // focusedBorder: OutlineInputBorder(
-                  //   borderSide: const BorderSide(
-                  //     color: Colors.black,
-                  //     width: 3.0,
-                  //     style: BorderStyle.solid,
-                  //     strokeAlign:
-                  //         BorderSide
-                  //             .strokeAlignOutside, // THIS WILL SET COLOR TO OUTSIDE OF BOUNDRY
-                  //     // strokeAlign: BorderSide.strokeAlignCenter, THIS WILL SET BOUNDRY COLOR TO CENTER OF THE BOUNDRY
-                  //   ),
-                  //   // borderRadius: BorderRadius.all(
-                  //   //   Radius.circular(30),
-                  //   // )
-                  //   borderRadius: BorderRadius.circular(
-                  //     60,
-                  //   ), // same output as .all
+                    Icons.monetization_on_outlined, // Icon for the input field
+                  ),
+                  prefixIconColor: Colors.black, // Icon color set to black
+                  filled:
+                      true, // Enables background color inside the input field
+                  fillColor:
+                      Colors
+                          .white, // Set background color of the text field to white
                   focusedBorder:
-                      border, // jo cheez upar hai usko final variable bana ke yaha likh diya to reduce complexity of code
-                  enabledBorder: border,
+                      border, // Use the defined border style when the field is focused
+                  enabledBorder:
+                      border, // Use the same border style when the field is enabled
                 ),
                 keyboardType: const TextInputType.numberWithOptions(
-                  decimal: true, // Allows decimal input
+                  decimal: true, // Allows decimal input for the USD value
                 ),
               ),
-            ),
-
-            // Convert button
-            Padding(
-              padding: const EdgeInsets.all(10), // Space around the button
-              child: ElevatedButton(
-                onPressed: () {
-                  setState(() {
-                    // Convert input text to double and perform conversion
-                    result = double.parse(textEditingController.text) * 87.09;
-                    result =
-                        double.parse(result.toStringAsFixed(2)); // Round to 2 decimal places
-                  });
-
-                  // debugPrint('Hello Guys');
-                  // if (kDebugMode) {
-                  //   // three types of modes : debug , release , profile
-                  //   print('Hello Guys');
-                  // }
-                  return;
-                },
+              const SizedBox(
+                height: 10,
+              ), // Adds space between input field and button
+              // Convert button that triggers the conversion
+              ElevatedButton(
+                onPressed:
+                    convert, // When the button is pressed, it calls the convert() method
+                // debugPrint('Hello Guys');
+                // if (kDebugMode) {
+                //   // three types of modes : debug , release , profile
+                //   print('Hello Guys');
+                // }
                 style: ElevatedButton.styleFrom(
-                  elevation: 15, // Button shadow effect
-                  backgroundColor: Colors.black, // Button background color
-                  foregroundColor: Colors.white, // Text color
-                  minimumSize: const Size(double.infinity, 50), // Full-width button
+                  elevation: 15, // Adds shadow to the button
+                  backgroundColor:
+                      Colors.black, // Set button background color to black
+                  foregroundColor:
+                      Colors.white, // Set text color on button to white
+                  minimumSize: const Size(
+                    double.infinity,
+                    50,
+                  ), // Make button full-width with minimum height 50
                   shape: RoundedRectangleBorder(
-                    borderRadius: BorderRadius.circular(10), // Rounded button corners
+                    borderRadius: BorderRadius.circular(
+                      10,
+                    ), // Rounded corners for the button
                   ),
                 ),
-                child: const Text('Convert'), // Button label
+                child: const Text('Convert'), // Label on the button
               ),
-            ),
-          ],
+            ],
+          ),
         ),
       ),
     );
